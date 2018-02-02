@@ -213,7 +213,41 @@ class MinimaxPlayer(IsolationPlayer):
             raise SearchTimeout()
 
         # TODO: finish this function!
-        raise NotImplementedError
+        best_move = (-1, -1)
+        return max(game.get_legal_moves(), key=lambda m: self.min_value(game.forecast_move(m), depth-1))
+
+
+    def terminal_test(self, game):
+        """This function judges if the turn is terminal """
+        return not bool(game.get_legal_moves())
+
+
+    def min_value(self, game, depth):
+        """This function returns min_value of score"""
+        if self.terminal_test(game):
+            return 1 
+        if depth == 0:
+            return len(game.get_legal_moves)
+        v = float("inf")
+        for m in game.get_legal_moves():
+            v = min(v, self.max_value(game.forecast_move(m)), depth-1)
+        return v
+
+
+    def max_value(self, game, depth):
+        if self.terminal_test(game):
+            return -1 
+        if depth == 0:
+            return len(game.get_legal_moves)
+        v = float("-inf")
+        for m in game.get_legal_moves():
+            v = max(v, self.min_value(game.forecast_move(m)), depth-1)
+        return v
+
+    def minimax_decision(self, game):
+        # The built in `max()` function can be used as argmax!
+        return max(game.get_legal_moves(),
+                key=lambda m: self.min_value(game.forecast_move(m)))
 
 
 class AlphaBetaPlayer(IsolationPlayer):
